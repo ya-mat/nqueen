@@ -1,22 +1,48 @@
 # -*- coding: utf-8 -*-
 
 # This code is writen by Yasuhiro Matsumoto.
-# Copyright (C) 2017/11/30.
+# Copyright (C) 2017 Yasuhiro Matsumoto.
 
 #----------------------------------------
-def diffuu(vv, i, j, sizen, sum_row, sum_col, diag1, diag2):
-    sum_row = 0
-    sum_col = 0
+def diffuu(vv, i, j, aa, bb, cc, sizen, row_col, diag):
+    row_col[0] = 0
+    row_col[1] = 0
 
     for k in range(sizen):
-        sum_row += vv[k][j]
-        sum_col += vv[i][k]
+        row_col[0] += vv[k][j]
+        row_col[1] += vv[i][k]
 
-    diag1 = 0
+    diag[0] = 0
 
-    #naname kara
+    k = 1
+    while i + k <= sizen - 1 and j - k >= 0:
+        diag[0] += vv[i + k][j - k]
+        k += 1
 
-    return
+    k = 1
+    while i - k >= 0 and j + k <= sizen - 1:
+        diag[0] += vv[i - k][j + k]
+        k += 1
+
+    diag[1] = 0
+
+    k = 1
+    while i + k <= sizen - 1 and j + k <= sizen - 1:
+        diag[1] += vv[i + k][j + k]
+        k += 1
+
+    k = 1
+    while i - k >= 0 and j - k >= 0:
+        diag[1] += vv[i - k][j - k]
+        k += 1
+
+    h = 0
+    if row_col[0] == 0:
+        h += 1
+    if row_col[1] == 0:
+        h += 1
+
+    return -aa*(row_col[0] + row_col[1] - 2) - bb*(diag[0] + diag[1]) + cc*h
 
 #----------------------------------------
 def main(sizen, aa, bb):
@@ -24,6 +50,8 @@ def main(sizen, aa, bb):
 
     uu = [[i for i in range(sizen)] for j in range(sizen)]
     vv = [[i for i in range(sizen)] for j in range(sizen)]
+    row_col = [0 for i in range(2)]
+    diag = [0 for i in range(2)]
 
     # Initialize
     for i in range(sizen):
@@ -34,38 +62,35 @@ def main(sizen, aa, bb):
             else:
                 vv[i][j] = 0
 
-    sum_row = 0
-    sum_col = 0
-
     tt = 0
-    diag = 1
-    diag1 = 0
-    diag2 = 0
+    diag0 = 1
     cc = 1
 
     # Newral
-    while diag > 0 and tt < 1000:
-        diag = 0
+    while diag0 > 0 and tt < 1000:
+        diag0 = 0
         for i in range(sizen):
             for j in range(sizen):
-                uu[i][j] += diffuu(vv, i, j, sizen, sum_row, sum_col, diag1, diag2)
+                uu[i][j] += diffuu(vv, i, j, aa, bb, cc, sizen, row_col, diag)
 
                 if uu[i][j] > 15:
                     uu[i][j] = 15
-                else if uu[i][j] < -15:
+                elif uu[i][j] < -15:
                     uu[i][j] = -15
 
-
+        for i in range(sizen):
+            for j in range(sizen):
                 if uu[i][j] > 0:
                     vv[i][j] = 1
                 else:
                     vv[i][j] = 0
 
                 conf = 1
-                if sum_row + sum_col == 2 and diag1 == 2 and diag2 == 2:
+                if row_col[0] + row_col[1] == 2 and diag[0] == 1 and diag[1] == 1:
                     conf = 0
+                diag0 += conf
 
-                diag += conf
+        tt += 1
 
 #        if tt % 20 < 5:
 #            cc = 4
@@ -73,10 +98,12 @@ def main(sizen, aa, bb):
 #            cc = 1
 
     # result
-    for i in vv:
-        print vv[i]
+    for i in range(sizen):
+        for j in range(sizen):
+            print vv[i][j],
+        print ''
 
-    print 'Solved!!, t = ', t
+    print 'Solved!!, t = ', tt
 
 
 #----------------------------------------
