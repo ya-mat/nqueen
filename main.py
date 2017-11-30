@@ -85,10 +85,10 @@ def main(sizen, aa, bb):
                 else:
                     vv[i][j] = 0
 
-                conf = 1
+                conv = 1
                 if row_col[0] + row_col[1] == 2 and diag[0] == 1 and diag[1] == 1:
-                    conf = 0
-                diag0 += conf
+                    conv = 0
+                diag0 += conv
 
         tt += 1
 
