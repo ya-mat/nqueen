@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# This code is writen by Yasuhiro Matsumoto.
+# This code is written by Yasuhiro Matsumoto.
 # Copyright (C) 2017 Yasuhiro Matsumoto.
 
 #----------------------------------------
@@ -48,8 +48,8 @@ def diffuu(vv, i, j, aa, bb, cc, sizen, row_col, diag):
 def main(sizen, aa, bb):
     import random
 
-    uu = [[i for i in range(sizen)] for j in range(sizen)]
-    vv = [[i for i in range(sizen)] for j in range(sizen)]
+    uu = [[0 for i in range(sizen)] for j in range(sizen)]
+    vv = [[0 for i in range(sizen)] for j in range(sizen)]
     row_col = [0 for i in range(2)]
     diag = [0 for i in range(2)]
 
@@ -67,16 +67,21 @@ def main(sizen, aa, bb):
     cc = 1
 
     # Newral
-    while diag0 > 0 and tt < 1000:
+    while diag0 > 0 and tt < 300:
         diag0 = 0
         for i in range(sizen):
             for j in range(sizen):
                 uu[i][j] += diffuu(vv, i, j, aa, bb, cc, sizen, row_col, diag)
 
-                if uu[i][j] > 15:
-                    uu[i][j] = 15
-                elif uu[i][j] < -15:
-                    uu[i][j] = -15
+                if uu[i][j] > 10:
+                    uu[i][j] = 10
+                elif uu[i][j] < -10:
+                    uu[i][j] = -10
+
+                conv = 1
+                if row_col[0] + row_col[1] == 2 and diag[0] <= 1 and diag[1] <= 1:
+                    conv = 0
+                diag0 += conv
 
         for i in range(sizen):
             for j in range(sizen):
@@ -85,17 +90,12 @@ def main(sizen, aa, bb):
                 else:
                     vv[i][j] = 0
 
-                conv = 1
-                if row_col[0] + row_col[1] == 2 and diag[0] == 1 and diag[1] == 1:
-                    conv = 0
-                diag0 += conv
-
         tt += 1
 
-#        if tt % 20 < 5:
-#            cc = 4
-#        else:
-#            cc = 1
+        if tt % 20 < 5:
+            cc = 4
+        else:
+            cc = 1
 
     # result
     for i in range(sizen):
@@ -108,7 +108,7 @@ def main(sizen, aa, bb):
 
 #----------------------------------------
 if __name__ == '__main__':
-    sizen = 8
+    sizen = 10
     aa = 1
     bb = 1
     main(sizen, aa, bb)
